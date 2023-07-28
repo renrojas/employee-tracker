@@ -75,39 +75,62 @@ function viewEmployees(){
 }
 
 //FUNCTION TO ADD EMPLOYEES
-// function addEmployee(){
-//     inquirer.prompt([
-//         {
-//             type: 'input',
-//             message: 'What is the employees first name?',
-//             name: 'first_name'
-//         },
-//         {
-//             type: 'input',
-//             message: 'What is the employees last name?',
-//             name: 'last_name'
-//         },
-//         {
-//             type: 'list',
-//             message: 'What is the employees role?',
-//             choices: []
-//         },
-//         {
-//             type: 'list',
-//             message: 'Who is the employees manager?',
-//             choices: []
-//         }
-//     ])
-//     .then((response) => {
-//         console.log(response)
-//         const role_name = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?)'
-    
+function addEmployee(){
+    const sqlrole = `SELECT * FROM role`;
+    const roles = [];
+        db.query(sqlrole, (err, roleresult) => {
+            for (let i = 0; i < roleresult.length; i++) {
+                //console.log(result[i].role)
+                roles.push({
+                    name: roleresult[i].title,
+                    value: roleresult[i].id
+                })
+            }
+        });
+    const sqlmanager = `SELECT * FROM employee`;
+    const managers = [];
+    db.query(sqlmanager, (err, managerResult) => {
+        for (let i = 0; i < managerResult.length; i++) {
+            managers.push({
+                name: managerResult[i].first_name,
+                value: managerResult[i].id
+            })
+        }
+    });
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'What is the employees first name?',
+            name: 'first_name'
+        },
+        {
+            type: 'input',
+            message: 'What is the employees last name?',
+            name: 'last_name'
+        },
+        {
+            type: 'list',
+            message: 'What is the employees role?',
+            choices: roles,
+            name: 'role'
+        },
+        {
+            type: 'list',
+            message: 'Who is the employees manager?',
+            choices: managers,
+            name:'manager'
+        }
+    ])
+    .then((response) => {
+        console.log(response)
+        const employee_name = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?,?,?,?)'
+        const params = [response.first_name, response.last_name, response.role, response.manager]
 
-//         db.query(sql, params, (err, response) => {
-//             console.log(response)
-//         });
-//     })
-// }
+        db.query(employee_name, params, (err, response) => {
+            console.log(response)
+        });
+    })
+}
 
 
 
@@ -139,9 +162,7 @@ function addRole(){
                     name: result[i].department,
                     value: result[i].id
                 })
-                
             }
-            //console.log(departments)
         })
     inquirer.prompt([
         {
@@ -170,6 +191,7 @@ function addRole(){
             console.log(response)
         });
     })
+//    mainMenu();
 }
 
 
@@ -205,7 +227,7 @@ function addDept(){
         console.log(response)
     });
       });  
-  mainMenu();
+//  mainMenu();
 }
 
 
