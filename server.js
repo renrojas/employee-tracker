@@ -42,7 +42,7 @@ function mainMenu() {
             addEmployee();
         };
         if(response.main_menu === 'Update Employee Role') {
-            
+            updateEmployee();
         };
         if(response.main_menu === 'View All Roles') {
             viewRoles();
@@ -92,7 +92,7 @@ function addEmployee(){
     db.query(sqlmanager, (err, managerResult) => {
         for (let i = 0; i < managerResult.length; i++) {
             managers.push({
-                name: managerResult[i].first_name,
+                name: managerResult[i].first_name + " " + managerResult[i].last_name,
                 value: managerResult[i].id
             })
         }
@@ -135,6 +135,54 @@ function addEmployee(){
 
 
 //FUNCTION TO UPDATE EMPLOYEE ROLE
+function updateEmployee(){
+    const sqlemployee = `SELECT * FROM employee`;
+    const employees = [];
+        db.query(sqlemployee, (err, result) => {
+            for (let i = 0; i < result.length; i++) {
+                employees.push({
+                    name: result[i].first_name + " " + result[i].last_name,
+                    value: result[i].id
+                })
+            }
+        });
+    const sqlrole = `SELECT * FROM role`;
+    const roles = [];
+        db.query(sqlrole, (err, roleresult) => {
+            for (let i = 0; i < roleresult.length; i++) {
+                roles.push({
+                    name: roleresult[i].title,
+                    value: roleresult[i].id
+                })
+            }
+        });
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Do you want to update an employee?',
+            name: 'question'
+        },
+        {
+            type: 'list',
+            message: 'Which employees role do you want to update?',
+            choices: employees,
+            name: 'employees'
+        },
+        {
+            type: 'list',
+            message: 'Which role do you want to assign the selected employee?',
+            choices: roles,
+            name: 'role'
+        }
+    ])
+    .then((response) => {
+        const sql = `UPDATE employee SET review = ? WHERE id = ?`;
+  const params = [req.body.review, req.params.id];
+
+  db.query(sql, params, (err, result) => {
+    console.log(result)
+    });
+}
 
 
 
@@ -190,9 +238,10 @@ function addRole(){
         db.query(role_name, params, (err, response) => {
             console.log(response)
         });
+    mainMenu();
     })
-//    mainMenu();
-}
+
+});
 
 
 //FUNCTION TO VIEW ALL DEPARTMENTS
