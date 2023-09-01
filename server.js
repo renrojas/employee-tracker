@@ -60,19 +60,21 @@ function mainMenu() {
             
         };
     })
-}
+};
 //FUNCTION TO VIEW ALL EMPLOYEES
 function viewEmployees(){
         const sql = `SELECT * FROM employee`;
 
         db.query(sql, (err, result) => {
             console.table(result)
+            mainMenu();
           if (err) {
             res.status(400).json({ error: err.message });
             return;
           }
-        });
-}
+        })
+
+};
 
 //FUNCTION TO ADD EMPLOYEES
 function addEmployee(){
@@ -128,9 +130,10 @@ function addEmployee(){
 
         db.query(employee_name, params, (err, response) => {
             console.log(response)
+            mainMenu()
         });
     })
-}
+};
 
 
 
@@ -176,14 +179,16 @@ function updateEmployee(){
         }
     ])
     .then((response) => {
-        const sql = `UPDATE employee SET review = ? WHERE id = ?`;
-  const params = [req.body.review, req.params.id];
+        const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+    const params = [response.role, response.employees];
+    console.log(response)
 
   db.query(sql, params, (err, result) => {
     console.log(result)
+    mainMenu();
+    })
     });
-}
-
+};
 
 
 //FUNCTION TO VIEW ALL ROLES
@@ -192,12 +197,13 @@ function viewRoles(){
     console.log("hello")
     db.query(sql, (err, result) => {
         console.table(result)
+        mainMenu();
       if (err) {
         res.status(400).json({ error: err.message });
         return;
       }
     });
-}
+};
 
 //FUNCTION TO ADD A ROLE
 function addRole(){
@@ -237,11 +243,12 @@ function addRole(){
 
         db.query(role_name, params, (err, response) => {
             console.log(response)
+            mainMenu();
         });
-    mainMenu();
+
     })
 
-});
+};
 
 
 //FUNCTION TO VIEW ALL DEPARTMENTS
@@ -250,6 +257,7 @@ function viewDept(){
 
         db.query(sql, (err, result) => {
             console.table(result)
+            mainMenu();
           if (err) {
             res.status(400).json({ error: err.message });
             return;
@@ -274,9 +282,9 @@ function addDept(){
       
       db.query(sql, params, (err, response) => {
         console.log(response)
+        mainMenu();
     });
       });  
-//  mainMenu();
 }
 
 
