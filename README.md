@@ -8,7 +8,7 @@ This project was created for business owners to be able to view and manage depar
 ## Installation
 Clone the project Repository: https://github.com/renrojas/employee-tracker
 
-Then follow the video walkthrough to load the database and launch the commandline application: 
+Then follow the video walkthrough to load the database and launch the commandline application: https://youtu.be/fKhGM-D9pTw 
 
 ## Usage
 To navigate this application, you will start by invoking the application by using the following Command: node index.js. 
